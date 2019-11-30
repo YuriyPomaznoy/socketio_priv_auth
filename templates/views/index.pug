@@ -1,0 +1,93 @@
+extends ../layuots/main
+
+block page-css
+	link(rel='stylesheet', href='/public/stylesheets/chatFolder.css')
+
+block content
+	#user-name
+		if(user)
+			- var dataPic = 'data:image/png;base64,' + user.avatar;
+			div
+				img#avtr(src=dataPic, style='border:3px solid red;border-radius:75px')
+				span#us-name(style='font-size:24pt') #{user.username}
+		else
+			h3 No User
+	h1 #{title}
+	p Welcome to #{title}
+
+	#quest-n
+		#author-quest(style='color:red;height:16px;')
+
+	input(id='this-room', type='hidden', value='')
+	input(id='my-socket-id', type='hidden', value='')
+	#friend-list
+		ul(id='friends')
+
+	#folder.folder-place
+		div(style='width:90%;margin:auto;padding:10px')
+			#talker(style='height:20px;background:#fff;padding:3px')
+			#folder-text
+			form
+				input(id='write-message', type='text', value='', size="34")
+				br
+				button(id='send-button' disabled) Send
+		img(id='kross', src='/public/images/kross.png')
+
+	form(name='loginForm', action='/signin', method='POST')
+		input(type='text', name='username', value='', placeholder='username')
+		br
+		input(type='password', name='password', value='', placeholder='password')
+		br
+		button(type='submit', id='loginButton') Send
+	br
+	a(href='/registr-page') Регистрация
+
+block page-js
+	script(src='/public/vendor/socket.io.js')
+	script.
+		var usName = document.getElementById('us-name');
+		var avTr = document.getElementById('avtr');
+		//var n = Math.random().toString(36).slice(2, 12).toUpperCase();
+		//userName.innerHTML = n;
+	script(src='/public/javascripts/socketIoCode.js')
+	script.
+		var myFace = { name: usName.innerHTML, avatar: avTr.getAttribute('src') };
+		if(myFace.name != 'No User') {
+			new SocketIoCode(myFace);
+		}
+		/*
+		var loginForm = document.forms.loginForm;
+		var but = document.getElementById('loginButton');
+		but.onclick = function() {
+			var username = loginForm.elements.username.value;
+			var password = loginForm.elements.password.value;
+
+			var xhr = new XMLHttpRequest();
+			xhr.open('POST', '/login', true);
+			var body = {
+				username: username,
+				password: password
+			};
+			xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+
+			var message = JSON.stringify(body);
+			xhr.send(message);
+
+			xhr.onreadystatechange = function() {
+				if (xhr.readyState != 4) return;
+				if (xhr.status != 200) {
+					alert(xhr.status + ': ' + xhr.statusText);
+				} else {
+					var resp = JSON.parse(xhr.responseText);
+					console.log(resp);
+					localStorage.setItem('Authorization', 'Bearer ' + resp.token);
+					var elem = document.createElement('div');
+					elem.innerHTML = `<div>${resp.user}</div>
+					<div>${resp.isAdmin}</div>`;
+					document.body.appendChild(elem);
+				}
+			};
+			return false;
+		};
+		*/
+		

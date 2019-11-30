@@ -1,0 +1,51 @@
+#basic-div {
+	position: absolute;
+	padding: 5px;
+	border: 1px solid red;
+}
+#inp-f {
+	position: absolute;
+	left: 10px;
+	top: 50px;
+	border: 1px solid blue;
+}
+#kart {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+}
+.canvas {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	border: 2px solid black;
+	z-index: 100;
+	background: url(../images/layerRect.png);
+	background-repeat: no-repeat;
+}
+#mod-wind {
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 1000;
+}
+.mod-win-no {
+	visibility: hidden;
+	background: rgba(0, 0, 0, 0)
+}
+.mod-win-yes {
+	visibility: visible;
+	background: rgba(0, 0, 0, 0.5);
+	transition: background 700ms;
+}
+#for-form {
+	width: 50%;
+	background: white;
+	padding: 10px;
+	margin: auto;
+	position: absolute;
+	top: 50%;
+	left: 25%;
+}

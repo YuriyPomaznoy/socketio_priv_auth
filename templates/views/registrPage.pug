@@ -1,0 +1,173 @@
+extends ../layuots/main
+
+block page-css
+	link(rel='stylesheet', href='/public/stylesheets/chatFolder.css')
+	link(rel='stylesheet', href='/public/stylesheets/registr.css')
+
+block content
+	div(style='height:100px')
+		table
+			tr
+				td Логин
+				td
+					input#username(type='text', value='', placeholder='username')
+			tr
+				td Пароль
+				td
+					input#password(type='password' value='', placeholder='password')
+	#basic-div
+		input#select-file(type="file", value='')
+		button#upload-file Регистрироваться
+		#inp-f
+		
+	#mod-wind.mod-win-no
+		#for-form
+			form(name='loginForm', action='/signin', method='POST')
+				table
+					tr
+						td Login
+						td
+							input(type='text', name='username', value='', placeholder='Login')
+					tr
+						td Password
+						td
+							input(type='password', name='password', value='', placeholder='password')
+					tr
+						td
+							button(type='submit', id='loginButton') Send
+
+
+block page-js
+	script(src='/public/vendor/socket.io.js')
+	script.
+		// НЕ НУЖНОЕ
+		var socketA = io('http://localhost:5000/auth-sock');
+		var mySocketID;
+		socketA.on('mySocketId', function(id) {
+			mySocketID = id;
+			console.log(mySocketID);
+		});
+		/////////////
+		
+		var basicDiv = document.getElementById('basic-div');
+		var inpF = document.getElementById('inp-f');
+		var selectFile = document.getElementById('select-file');
+		var uploadFileButton = document.getElementById('upload-file');
+		var dataPicture;
+		var modWind = document.getElementById('mod-wind');
+
+		selectFile.onchange = function previewFile() {
+			inpF.innerHTML = '';
+
+			var file = selectFile.files[0];
+			var reader = new FileReader();
+			
+			var elemKart = document.createElement('img');
+			elemKart.id = 'kart';
+			elemKart.style.height = '375px';
+			
+			if(file)
+				reader.readAsDataURL(file);
+			else
+				elemKart.src = "";
+
+			reader.onloadend = function () {
+				elemKart.src = reader.result;
+				inpF.appendChild(elemKart);
+				
+				var elemCanv = document.createElement('div');
+				elemCanv.className = 'canvas';
+				elemCanv.style.height = '375px';
+				
+				setTimeout(function() {
+					dataPicture = getComputedStyle(document.getElementById('kart'));
+					console.log(dataPicture.width);
+					
+					if(parseInt(dataPicture.width) < parseInt(dataPicture.height)) {
+						elemKart.style.height = '520px';
+						elemCanv.style.height = '520px';
+					}
+					
+					dataPicture = getComputedStyle(document.getElementById('kart'));
+					basicDiv.style.width = (parseInt(dataPicture.width) + 20) + 'px';
+					basicDiv.style.height = (parseInt(dataPicture.height) + 50) + 'px';
+					
+					elemCanv.style.width = parseInt(dataPicture.width) + 'px';
+					elemCanv.style.backgroundPosition = '-85px -85px';
+					
+					inpF.appendChild(elemCanv);
+				}, 5);
+			};
+
+		};
+
+		var eeee = false;
+		var dataShiftX, dataShiftY, backgroundData;
+
+		inpF.onmousedown = function(ev) {
+
+			var elemCanv = document.querySelector('.canvas');
+
+			eeee = true;
+			
+			var shiftX = ev.clientX;
+			var shiftY = ev.clientY;
+			backgroundData = getComputedStyle(elemCanv).backgroundPosition;
+			var arrSorce = backgroundData.split(' ');
+			var sorceBackgrX = parseInt(arrSorce[0]);
+			var sorceBackgrY = parseInt(arrSorce[1]);
+			console.log(sorceBackgrX, sorceBackgrY);
+			
+			inpF.onmousemove = function(e) {
+				if(eeee) {
+					dataShiftX = sorceBackgrX + (e.clientX - shiftX);
+					dataShiftY = sorceBackgrY + (e.clientY - shiftY);
+					elemCanv.style.backgroundPosition = dataShiftX + 'px ' + dataShiftY + 'px';
+				}
+			}
+			
+			inpF.onmouseup = function() {
+				inpF.onmousemove = null;
+				inpF.onmouseup = null;
+				eeee = false;
+			};
+		};
+
+		uploadFileButton.onclick = function() {
+			var file = selectFile.files[0];
+		
+			var formData = new FormData();
+			formData.append('heightPict', parseInt(getComputedStyle(document.getElementById('kart')).height));
+			
+			if(dataShiftX < 0) {
+				formData.append('X', 85 - Math.abs(dataShiftX));
+			} else {
+				formData.append('X', 85 + dataShiftX);
+			}
+			
+			if(dataShiftY < 0) {
+				formData.append('Y', 85 - Math.abs(dataShiftY));
+			} else {
+				formData.append('Y', 85 + dataShiftY);
+			}
+			
+			formData.append('username', document.getElementById('username').value);
+			formData.append('password', document.getElementById('password').value);
+			formData.append('file', file);
+			
+				var xhr = new XMLHttpRequest();
+				xhr.open('POST', '/registration-pict', true);
+				xhr.send(formData);
+				
+				xhr.onload = xhr.onerror = function() {
+					if (this.status == 200) {
+						makeLoginForm();
+					} else {
+						console.log('ERROR!!!');
+					}
+				};
+		};
+		
+		function makeLoginForm() {
+			modWind.className = 'mod-win-yes';
+		}

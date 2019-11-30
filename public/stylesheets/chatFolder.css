@@ -1,0 +1,93 @@
+#quest-n {
+	padding:10px;
+	position:absolute;
+	top:60px;
+	right:20.5%;
+	width:260px;
+	height:250px;
+	border:2px solid red;
+	border-radius:7px;
+	background:#eee;
+	z-index:10;
+	font-size:18px;
+}
+#friend-list {
+	position:absolute;
+	top:10px;
+	right:10px;
+	width:200px;
+	padding:5px;
+	background:#DDD;
+	border:1px solid #AAA;
+}
+#friends {
+	list-style: none;
+}
+#friends li {
+	margin-left: -20px;
+}
+.person {
+	margin: 5px;
+	padding: 5px;
+	width: 150px;
+	height: 50px;
+	border: 1px solid blue;
+	display: table-cell;
+	vertical-align: middle;
+}
+.avaimage {
+	width: 40px;
+	border: 1px solid blue;
+	border-radius: 20px;
+	float: left;
+}
+.logname {
+	color: blue;
+	font-weight: bold;
+	margin-left: 50px;
+	padding-top: 10px;
+}
+#folder {
+	position: fixed;
+	top: -5px;
+	right: 20%;
+	z-index: 100;
+	width: 300px;
+	height: 400px;
+	background: url(../../public/images/folder.png) no-repeat left;
+}
+.folder-place {
+	margin: -340px 0 0 0;
+	transition: margin 400ms;
+}
+.folder-uptop {
+	margin-top: 0;
+	transition: margin-top 400ms;
+}
+#folder-text {
+	position: relative;
+	height: 250px;
+	margin: 10px 0 10px 0;
+	padding: 5px;
+	background: rgb(250, 250, 250);
+	border: 2px solid black;
+	text-align: left;
+	overflow-y: auto;
+}
+#folder button {
+	background: red;
+	width: 90px;
+	height: 40px;
+	color: white;
+	font-size: 15pt;
+	margin-top: 10px;
+	margin-left: 25px;
+}
+#kross {
+	position:relative;
+	left:-5px;
+	bottom:35px;
+	z-index:200;
+	width:25px;
+	float:right;
+}

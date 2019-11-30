@@ -1,0 +1,25 @@
+extends ../layuots/main
+
+block content
+	input(type='button' id='but', value='SensButton')
+
+block page-js
+	script.
+		document.getElementById('but').onclick = function() {
+			var xhr = new XMLHttpRequest();
+			xhr.open('GET', '/admin/get');
+
+			var token = localStorage.getItem('Authorization');
+			xhr.setRequestHeader('Authorization', token);
+			xhr.send();
+
+			xhr.onreadystatechange = function() {
+				if(xhr.readyState != 4) return;
+				if(xhr.status == 200) {
+					var str = xhr.responseText;
+					console.log(xhr.responseText);
+
+					window.location = str;
+				}
+			}
+		}
